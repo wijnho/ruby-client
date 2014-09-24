@@ -4,6 +4,9 @@ require './lib/zumata'
 
 describe "Zumata::Client" do
 
+  vcr_recorded_checkin = '11/15/2014'
+  vcr_recorded_checkout = '11/16/2014'
+
   raise Zumata::TestConfigError unless ENV["ZUMATA_API_KEY"]
   sample_api_key = ENV["ZUMATA_API_KEY"]
 
@@ -17,7 +20,7 @@ describe "Zumata::Client" do
     	
       # note - when recording the cassette this requires a cached search w/ results to exist
       destination_id = "f75a8cff-c26e-4603-7b45-1b0f8a5aa100" # Singapore
-      results = @client.search_by_destination destination_id
+      results = @client.search_by_destination destination_id, {checkin: vcr_recorded_checkin, checkout: vcr_recorded_checkout}
     	data = JSON.parse(results.body)
       expect(data["searchCompleted"]).to_not be(nil)
       expect(data["content"]["hotels"].length).to be > 0
@@ -89,7 +92,7 @@ describe "Zumata::Client" do
       
       destination_id = "53d32e78-c548-42af-5236-fb89e0977722" # Barcelona
       results = VCR.use_cassette('search_by_destination_done_2', :record => :new_episodes) do
-        @client.search_by_destination destination_id
+        @client.search_by_destination destination_id, {checkin: vcr_recorded_checkin, checkout: vcr_recorded_checkout}
       end
       
       data = JSON.parse(results.body)
@@ -112,7 +115,7 @@ describe "Zumata::Client" do
 
       destination_id = "f75a8cff-c26e-4603-7b45-1b0f8a5aa100" # Singapore
       results = VCR.use_cassette('search_by_destination_done', :record => :new_episodes) do
-        @client.search_by_destination(destination_id)
+        @client.search_by_destination(destination_id, {checkin: vcr_recorded_checkin, checkout: vcr_recorded_checkout})
       end
       
       data = JSON.parse(results.body)
@@ -134,7 +137,7 @@ describe "Zumata::Client" do
       
       destination_id = "f75a8cff-c26e-4603-7b45-1b0f8a5aa100" # Singapore
       results = VCR.use_cassette('search_by_destination_done', :record => :new_episodes) do
-        @client.search_by_destination destination_id
+        @client.search_by_destination destination_id, {checkin: vcr_recorded_checkin, checkout: vcr_recorded_checkout}
       end
       
       data = JSON.parse(results.body)
@@ -154,7 +157,7 @@ describe "Zumata::Client" do
       
       destination_id = "53d32e78-c548-42af-5236-fb89e0977722" # Barcelona
       results = VCR.use_cassette('search_by_destination_done_2', :record => :new_episodes) do
-        @client.search_by_destination destination_id
+        @client.search_by_destination destination_id, {checkin: vcr_recorded_checkin, checkout: vcr_recorded_checkout}
       end
       
       data = JSON.parse(results.body)
