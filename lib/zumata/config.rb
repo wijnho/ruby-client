@@ -9,10 +9,11 @@ module Zumata
   end
  
   class Configuration
-    attr_accessor :api_url
+    attr_accessor :api_url, :api_key
  
     def initialize
       @api_url = ''
+      @api_key = nil
     end
   end
 end

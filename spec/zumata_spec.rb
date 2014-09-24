@@ -8,15 +8,15 @@ describe "Zumata::Client" do
   vcr_recorded_checkout = '11/16/2014'
 
   raise Zumata::TestConfigError unless ENV["ZUMATA_API_KEY"]
-  sample_api_key = ENV["ZUMATA_API_KEY"]
 
   before(:each) do
 
     Zumata.configure do |config|
-      config.api_url = 'staging.internal.api.zumata.com'
+      config.api_url = ENV["ZUMATA_API_URL"]
+      config.api_key = ENV["ZUMATA_API_KEY"]
     end
 
-    @client = Zumata::Client.new(sample_api_key)
+    @client = Zumata::Client.new
   end
 
   describe "search_by_destination" do
