@@ -9,14 +9,12 @@ module Zumata
   class Client
   	include HTTParty
 
-    raise Zumata::ClientConfigError unless ENV["ZUMATA_API_URL"]
-    base_uri ENV["ZUMATA_API_URL"]
-
     def initialize api_key
+      raise Zumata::ClientConfigError("No API URL configured") if Zumata.configuration.api_url == ''
+      self.base_uri = Zumata.configuration.api_url
       @api_key = api_key
       @timeout = 600
     end
-
 
     # GET /search
   	def search_by_destination destination, opts={}

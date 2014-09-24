@@ -8,6 +8,11 @@ describe "Zumata::Client" do
   sample_api_key = ENV["ZUMATA_API_KEY"]
 
   before(:each) do
+
+    Zumata.configure do |config|
+      config.api_url = 'staging.internal.api.zumata.com'
+    end
+
     @client = Zumata::Client.new(sample_api_key)
   end
 
