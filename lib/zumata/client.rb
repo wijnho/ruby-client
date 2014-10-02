@@ -54,6 +54,7 @@ module Zumata
       
       body_params = { api_key: opts[:api_key] || get_api_key,
                       booking_key: booking_key,
+                      affiliate_key: opts[:affiliate_key],
                       guest: guest,
                       payment: payment }
       
