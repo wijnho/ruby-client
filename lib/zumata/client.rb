@@ -51,14 +51,16 @@ module Zumata
 
       # raise InvalidRequestError unless valid_guest_params?(guest)
       # raise InvalidRequestError unless valid_payment_params?(payment)
-      
-      body_params = { api_key: opts[:api_key] || get_api_key,
+
+      api_key = opts[:api_key] || get_api_key
+      q_params = { api_key: api_key}
+      body_params = { api_key: api_key,
                       booking_key: booking_key,
                       affiliate_key: opts[:affiliate_key],
                       guest: guest,
                       payment: payment }
       
-      res = self.class.post("#{@api_url}/book", body: body_params.to_json, headers: { 'Content-Type' => 'application/json' }, timeout: @timeout)
+      res = self.class.post("#{@api_url}/book", query: q_params, body: body_params.to_json, headers: { 'Content-Type' => 'application/json' }, timeout: @timeout)
 
       status_code = res.code.to_i
       raise Zumata::GeneralError, res.body unless VALID_STATUS_CODES.include?(status_code)
