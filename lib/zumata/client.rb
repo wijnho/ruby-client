@@ -53,7 +53,7 @@ module Zumata
       # raise InvalidRequestError unless valid_payment_params?(payment)
 
       api_key = opts[:api_key] || get_api_key
-      q_params = { api_key: api_key}
+      q_params = { api_key: api_key }
       body_params = { api_key: api_key,
                       booking_key: booking_key,
                       affiliate_key: opts[:affiliate_key],
