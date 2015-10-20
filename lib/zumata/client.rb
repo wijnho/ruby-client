@@ -7,7 +7,7 @@ VALID_STATUS_CODES = [200, 500]
 
 module Zumata
   class Client
-  	include HTTParty
+    include HTTParty
 
     def initialize opts={}
       raise Zumata::ClientConfigError.new("No API URL configured") if Zumata.configuration.nil? || Zumata.configuration.api_url == ''
@@ -21,7 +21,7 @@ module Zumata
     end
 
     # GET /search
-  	def search_by_destination destination, opts={}
+    def search_by_destination destination, opts={}
 
       q = { api_key: opts[:api_key] || get_api_key,
             destination: destination,
@@ -30,14 +30,15 @@ module Zumata
             gzip: true,
             currency: opts[:currency] || "USD" }
 
-      # smart defaults    
+      # smart defaults
       q[:checkin]  = opts[:checkin] || (Time.now + 60*60*60*24).strftime("%m/%d/%Y")
       q[:checkout] = opts[:checkout] || (Time.now + 61*60*60*24).strftime("%m/%d/%Y")
 
       # optional
       q[:lang]     = opts[:lang] if opts[:lang]
       q[:timeout]  = opts[:timeout] if opts[:timeout]
-      
+      q[:filter]   = opts[:filter] if opts[:filter]
+
       res = self.class.get("#{@api_url}/search", query: q).response
 
       # todo - handle errors from search
@@ -59,7 +60,7 @@ module Zumata
                       affiliate_key: opts[:affiliate_key],
                       guest: guest,
                       payment: payment }
-      
+
       res = self.class.post("#{@api_url}/book", query: q_params, body: body_params.to_json, headers: { 'Content-Type' => 'application/json' }, timeout: @timeout)
 
       status_code = res.code.to_i
@@ -77,7 +78,7 @@ module Zumata
         end
         Zumata::ErrorHelper.handle_type(error_msg)
       end
-            
+
     end
   end
 end
