@@ -8,13 +8,13 @@ VALID_STATUS_CODES = [200, 500]
 module Zumata
   class Client
     include HTTParty
-    headers "Host" => @api_url
-    headers "X-Api-Key" => @api_key
     def initialize opts={}
       raise Zumata::ClientConfigError.new("No API URL configured") if Zumata.configuration.nil? || Zumata.configuration.api_url == ''
       @api_url = Zumata.configuration.api_url
       @api_key = opts[:api_key] unless opts[:api_key].nil?
       @timeout = 600
+      headers "Host" => @api_url
+      headers "X-Api-Key" => @api_key
     end
 
     def get_api_key
