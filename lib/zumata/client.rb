@@ -8,7 +8,8 @@ VALID_STATUS_CODES = [200, 500]
 module Zumata
   class Client
     include HTTParty
-
+    headers "Host" => @api_url
+    headers "X-Api-Key" => @api_key
     def initialize opts={}
       raise Zumata::ClientConfigError.new("No API URL configured") if Zumata.configuration.nil? || Zumata.configuration.api_url == ''
       @api_url = Zumata.configuration.api_url
@@ -24,20 +25,21 @@ module Zumata
     def search_by_destination destination, opts={}
 
       q = { api_key: opts[:api_key] || get_api_key,
-            destination: destination,
-            rooms: opts[:rooms] || 1,
-            adults: opts[:adults] || 2,
-            gzip: true,
+            destination_id: destination,
+            room_count: opts[:room_count] || 1,
+            adult_count: opts[:adult_count] || 2,
             currency: opts[:currency] || "USD" }
 
       # smart defaults
-      q[:checkin]  = opts[:checkin] || (Time.now + 60*60*60*24).strftime("%m/%d/%Y")
-      q[:checkout] = opts[:checkout] || (Time.now + 61*60*60*24).strftime("%m/%d/%Y")
+      q[:check_in_date]  = opts[:check_in_date] || (Time.now + 60*60*60*24).strftime("%Y-%m-%d")
+      q[:check_out_date] = opts[:check_out_date] || (Time.now + 61*60*60*24).strftime("%Y-%m-%d")
 
       # optional
       q[:lang]     = opts[:lang] if opts[:lang]
       q[:timeout]  = opts[:timeout] if opts[:timeout]
       q[:filter]   = opts[:filter] if opts[:filter]
+      q[:child_count]   = opts[:child_count] if opts[:child_count]
+      q[:source_market]   = opts[:source_market] if opts[:source_market]
 
       res = self.class.get("#{@api_url}/search", query: q).response
 
